@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
  * Emits Java source files.
  */
 public final class JavaWriter {
-  private static final Pattern TYPE_PATTERN = Pattern.compile("(?:[\\w$]+\\.)*([\\w$]+)");
+  private static final Pattern TYPE_PATTERN = Pattern.compile("(?:[\\w$]{1,5}\\.)*+([\\w$]{1,5})");
   private static final String INDENT = "  ";
 
   /** Map fully qualified type names to their short names. */

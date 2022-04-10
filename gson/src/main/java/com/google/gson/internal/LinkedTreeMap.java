@@ -203,13 +203,14 @@ public final class LinkedTreeMap<K, V> extends AbstractMap<K, V> implements Seri
    */
   Node<K, V> findByEntry(Entry<?, ?> entry) {
     Node<K, V> mine = findByObject(entry.getKey());
-    boolean valuesEqual = mine != null && equal(mine.value, entry.getValue());
+    boolean valuesEqual = mine != null && $Gson$Types.myEqual(mine.value, entry.getValue());
     return valuesEqual ? mine : null;
   }
 
+  /* modification : fonction plus nécessaire.
   private boolean equal(Object a, Object b) {
     return a == b || (a != null && a.equals(b));
-  }
+  }*/
 
   /**
    * Removes {@code node} from this tree, rearranging the tree's structure as
@@ -318,7 +319,7 @@ public final class LinkedTreeMap<K, V> extends AbstractMap<K, V> implements Seri
       int rightHeight = right != null ? right.height : 0;
 
       int delta = leftHeight - rightHeight;
-      if (delta == -2) {
+      if (delta == -2 && right != null) {
         Node<K, V> rightLeft = right.left;
         Node<K, V> rightRight = right.right;
         int rightRightHeight = rightRight != null ? rightRight.height : 0;
@@ -336,7 +337,7 @@ public final class LinkedTreeMap<K, V> extends AbstractMap<K, V> implements Seri
           break; // no further rotations will be necessary
         }
 
-      } else if (delta == 2) {
+      } else if (delta == 2 && left != null) {
         Node<K, V> leftLeft = left.left;
         Node<K, V> leftRight = left.right;
         int leftRightHeight = leftRight != null ? leftRight.height : 0;
@@ -538,7 +539,7 @@ public final class LinkedTreeMap<K, V> extends AbstractMap<K, V> implements Seri
       return next != header;
     }
 
-    final Node<K, V> nextNode() {
+    final Node<K, V> nextNode() throws NoSuchElementException {
       Node<K, V> e = next;
       if (e == header) {
         throw new NoSuchElementException();
@@ -566,8 +567,8 @@ public final class LinkedTreeMap<K, V> extends AbstractMap<K, V> implements Seri
     }
 
     @Override public Iterator<Entry<K, V>> iterator() {
-      return new LinkedTreeMapIterator<Entry<K, V>>() {
-        @Override public Entry<K, V> next() {
+      return new LinkedTreeMapIterator<Entry<K, V>>()  {
+        @Override public Entry<K, V> next() throws NoSuchElementException {
           return nextNode();
         }
       };
@@ -602,7 +603,7 @@ public final class LinkedTreeMap<K, V> extends AbstractMap<K, V> implements Seri
 
     @Override public Iterator<K> iterator() {
       return new LinkedTreeMapIterator<K>() {
-        @Override public K next() {
+        @Override public K next() throws NoSuchElementException{
           return nextNode().key;
         }
       };

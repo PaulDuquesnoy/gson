@@ -304,7 +304,7 @@ public final class JsonTreeReader extends JsonReader {
     stack[stackSize++] = newTop;
   }
 
-  private String getPath(boolean usePreviousPath) {
+  private String publicGetPath(boolean usePreviousPath) {
     StringBuilder result = new StringBuilder().append('$');
     for (int i = 0; i < stackSize; i++) {
       if (stack[i] instanceof JsonArray) {
@@ -331,14 +331,14 @@ public final class JsonTreeReader extends JsonReader {
   }
 
   @Override public String getPreviousPath() {
-    return getPath(true);
+    return publicGetPath(true);
   }
 
   @Override public String getPath() {
-    return getPath(false);
+    return publicGetPath(false);
   }
 
-  private String locationString() {
+  protected String locationString() {
     return " at path " + getPath();
   }
 }

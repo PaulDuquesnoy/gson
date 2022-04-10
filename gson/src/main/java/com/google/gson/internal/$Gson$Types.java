@@ -162,8 +162,8 @@ public final class $Gson$Types {
           + "GenericArrayType, but <" + type + "> is of type " + className);
     }
   }
-
-  static boolean equal(Object a, Object b) {
+  
+  static boolean myEqual(Object a, Object b) {
     return a == b || (a != null && a.equals(b));
   }
 
@@ -187,7 +187,7 @@ public final class $Gson$Types {
       // TODO: save a .clone() call
       ParameterizedType pa = (ParameterizedType) a;
       ParameterizedType pb = (ParameterizedType) b;
-      return equal(pa.getOwnerType(), pb.getOwnerType())
+      return myEqual(pa.getOwnerType(), pb.getOwnerType())
           && pa.getRawType().equals(pb.getRawType())
           && Arrays.equals(pa.getActualTypeArguments(), pb.getActualTypeArguments());
 
@@ -371,7 +371,7 @@ public final class $Gson$Types {
         Class<?> original = (Class<?>) toResolve;
         Type componentType = original.getComponentType();
         Type newComponentType = resolve(context, contextRawType, componentType, visitedTypeVariables);
-        toResolve = equal(componentType, newComponentType)
+        toResolve = myEqual(componentType, newComponentType)
             ? original
             : arrayOf(newComponentType);
         break;
@@ -380,7 +380,7 @@ public final class $Gson$Types {
         GenericArrayType original = (GenericArrayType) toResolve;
         Type componentType = original.getGenericComponentType();
         Type newComponentType = resolve(context, contextRawType, componentType, visitedTypeVariables);
-        toResolve = equal(componentType, newComponentType)
+        toResolve = myEqual(componentType, newComponentType)
             ? original
             : arrayOf(newComponentType);
         break;
@@ -389,12 +389,12 @@ public final class $Gson$Types {
         ParameterizedType original = (ParameterizedType) toResolve;
         Type ownerType = original.getOwnerType();
         Type newOwnerType = resolve(context, contextRawType, ownerType, visitedTypeVariables);
-        boolean changed = !equal(newOwnerType, ownerType);
+        boolean changed = !myEqual(newOwnerType, ownerType);
 
         Type[] args = original.getActualTypeArguments();
         for (int t = 0, length = args.length; t < length; t++) {
           Type resolvedTypeArgument = resolve(context, contextRawType, args[t], visitedTypeVariables);
-          if (!equal(resolvedTypeArgument, args[t])) {
+          if (!myEqual(resolvedTypeArgument, args[t])) {
             if (!changed) {
               args = args.clone();
               changed = true;
